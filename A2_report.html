@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Vis & Society Assignment 2</title>
+	<link rel="stylesheet" href="https://vis-society.github.io/assignments/report.css" />
+	<style>
+		.question-explanation {
+			font-size: 0.9em;
+			font-style: italic;
+			font-weight: normal;
+			margin: 0.25em 0 0.75em 0;
+			color: #555;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>
+			<small>Assignment 2</small>
+			Exploratory Data Analysis
+		</h1>
+
+		<p>
+			<strong>Summer Zhou</strong> — <em>xzhou27@mit.edu</em>
+		</p>
+	</header>
+	<main>
+		<section>
+			<h2>Subtheme: Corporate Landlords & Evictions</h2>
+
+			<h2>Dataset</h2>
+			<p>This dataset contains statistics describing corporate ownership rates and owner-occupancy rates for residential properties across Boston neighborhoods from 2004 to 2024. The data was derived from property assessment records provided by the City of Boston. The dataset contains both temporal and spatial components. The temporal dimension is represented by yearly observations spanning twenty years, while the spatial dimension is represented by individual Boston neighborhoods. For each neighborhood and year, the dataset records the proportion of housing units that are owner-occupied (own_occ_rate) and the proportion that are corporately owned (corp_own_rate). Additional census-based demographic attributes such as total adult population and educational attainment are also included. This dataset is relevant to our questions surrounding housing affordability because corporate ownership of residential properties has been linked to housing speculation, rising housing prices, and decreased housing stability for residents.</p>
+
+			<h3>Overall Analysis Questions</h3>
+			<ol>
+				<li>How have corporate ownership rates changed over time?
+					<p class="question-explanation">The motivation behind this question is to gain a general understanding of when corporate ownership began to emerge as a significant issue and how rapidly it has grown. This helps establish the broader context of our investigation. Additionally, if we observe a clear increase in corporate ownership over time, it would suggest that housing is increasingly being treated as a financial asset by corporations, reinforcing the idea that real estate is being actively exploited for investment purposes.</p>
+				</li>
+				<li>What is the relationship between corporate ownership and owner occupancy rates?
+					<p class="question-explanation">The readings suggest that increasing corporate ownership may contribute to displacement by making housing less affordable for individual residents. As housing prices increase, fewer residents may be able to afford homeownership, leading to lower owner occupancy rates. Therefore, we want to investigate whether neighborhoods with higher corporate ownership tend to have lower owner occupancy rates.</p>
+				</li>
+				<li>Which neighborhoods have experienced the greatest increases in corporate ownership?
+					<p class="question-explanation">This question helps us identify whether corporate ownership is concentrated in specific neighborhoods or evenly distributed across the city. By examining where the largest increases have occurred, we can better understand which communities may be most affected by corporate investment and potentially more vulnerable to housing affordability challenges.</p>
+				</li>
+			</ol>
+		</section>
+
+		<section>
+			<h2>Discoveries & Insights</h2>
+
+			<p>The dataset draws on authoritative sources (City of Boston property assessments and, in the Census file, block-group Census data) and is structured consistently over 2004–2024 with clear neighborhood-year units and decimal rates. Data quality is limited in several ways. The metadata for the Census and corporate ownership file states that corporate ownership is identified by keyphrase matching on owner names (e.g., LLC, LLP, Corp, Realty, Trust, Bank), which is incomplete and can misclassify both corporate and non-corporate owners. It also explains that owner-occupancy and corporate-ownership rates exclude blank or missing values from their denominators, so the rates are conditional on non-missing flags and may not represent all properties in a neighborhood. In the Census and corporate ownership file, the columns after own_occ_rate and corp_own_rate (Census variables such as total units, vacancy, and demographics) are constant across years within each neighborhood, likely because this information was captured in a single census year and then repeated. To account for this limitation, we do not use these Census variables to compare change over time; we use them only for comparisons across districts (neighborhoods) within a given snapshot.</p>
+
+			<figure>
+				<img src="data_quality_summary_bars.png" alt="Data quality: temporal coverage and variable change over time" />
+				<figcaption>
+					To better illustrate the data quality, we use this graph. The top panel shows temporal coverage (and spatial consistency): it shows that all expected neighborhood data are present from 2004 to 2024. The bottom panel shows that own_occ_rate and corp_own_rate change over time while tot_unit stays constant. In the lower graph, the x-axis is the year, and the y-axis is, for each year, the average number of distinct values of that variable that each neighborhood has when you look at the data from 2004 up to that year. If the line is rising, it means that as years pass, each neighborhood accumulates more years of data and the variable takes different values over time – so the variable is changing. If a line is completely flat, it means that the variable has not changed at all. The more a variable changes over time, the more the line rises.
+				</figcaption>
+			</figure>
+
+			<figure>
+				<img src="corp_ownership_over_time.png" alt="Corporate ownership rate by neighborhood and year" />
+				<figcaption>
+					The corp_ownership_over_time graph shows how corporate ownership of housing in Boston neighborhoods changed from 2004 to 2024. The x-axis is year (2004–2024) and the y-axis is the corporate ownership rate – the share of properties in a neighborhood classified as corporate-owned in that year (from 0 to 1, e.g. 0.30 = 30%). Each thin colored line is one of the 21 Boston neighborhoods; the thick black line is the mean corporate ownership rate across all neighborhoods for each year. Corporate ownership rises over time in every neighborhood: the mean goes from about 6% in 2004 to about 22% in 2024, so the share of corporate-owned housing roughly triples over the period. A higher line means a higher share of corporate-owned properties in that neighborhood in that year; a steeper slope means a faster increase over time. The black line summarizes the citywide trend and sits in the middle of the neighborhood lines. In short, the graph shows that corporate ownership of housing in Boston increased in all neighborhoods from 2004 to 2024, with the average rate roughly tripling and some neighborhoods seeing much larger increases than others. We see that it was relatively flat before the 2010s and experienced a sharper increase afterwards, which validates how corporate ownership has been a growing feature of the housing stock for the whole period and has become more significant over time. The fact that the increase is widespread (all 21 neighborhoods) and sustained supports the idea that housing is increasingly being treated as a financial asset by corporate owners. It seems like real estate is being actively used for investment across the city, not only in a handful of hotspots.
+				</figcaption>
+			</figure>
+
+			<figure>
+				<img src="owner_occupancy_over_time.png" alt="Owner occupancy rate by neighborhood and year" />
+				<figcaption>
+					Sitting at the opposite of corporate ownership rate is owner occupancy rate: the share of housing units in a neighborhood that are owner-occupied rather than rented or otherwise occupied. The owner occupancy over time graph plots this rate from 2004 to 2024 for each of the 21 Boston neighborhoods (thin colored lines) and for the city as a whole (thick black mean line). Over this period, owner occupancy falls in most neighborhoods: the mean declines from roughly 42% in 2004 to about 36% in 2024, and many individual neighborhood lines slope downward. That downward trend is the mirror of the rise in corporate ownership—as more properties are owned by corporations (often as rentals or investments), fewer are owner-occupied. Neighborhoods that had relatively high owner occupancy at the start generally stay above the mean but still drift down; those that were already more rental-heavy stay low and in some cases fall further. In short, the graph shows that owner occupancy has declined citywide and in most neighborhoods over 2004–2024, consistent with housing shifting from owner-occupancy toward corporate and institutional ownership.
+				</figcaption>
+			</figure>
+
+			<figure>
+				<img src="mean_owner_occupancy_and_corp_ownership.png" alt="Mean owner occupancy and corporate ownership over time" />
+				<figcaption>
+					We then put mean owner occupancy rate and mean corporate ownership rate on the same graph to show how they move together over time. The readings and project motivation suggest that as more housing is bought by corporations (often for rental or investment), fewer units are owner-occupied, so we expect owner occupancy to fall as corporate ownership rises. Plotting both citywide means from 2004 to 2024 lets us check that pattern: the green line (owner occupancy) trends down while the red line (corporate ownership) trends up, so the two rates move in opposite directions, consistent with housing shifting from owner-occupancy toward corporate ownership. An important clarification is that the mean owner occupancy rate and the mean corporate ownership rate do not add up to 100%. That is because a large share of housing is owned by individual landlords – neither owner-occupied nor corporately owned. This category typically includes small landlords, individual investors, and rental properties owned by people rather than by corporations. 				</figcaption>
+			</figure>
+
+			<figure>
+				<img src="other_component_over_time.png" alt="Change in other ownership rate over time" />
+				<figcaption>
+					To see how this portion changed over time, we plot the remaining share (1 − owner occupancy − corporate ownership) by year for each neighborhood and for the city as a whole. The figure shows the change in the "other" ownership rate over time. Over time, the mean other rate falls from about 0.62 in 2004 to about 0.55 in 2024, while corporate ownership rises and owner occupancy falls.
+				</figcaption>
+			</figure>
+
+			<figure>
+				<img src="mean_rates_with_other_portion.png" alt="Mean owner occupancy, corporate ownership, and other portion over time" />
+				<figcaption>
+					We put the mean of these three categories on the same graph to better understand their relationship. As corporate ownership grows, part of that growth comes from a shift out of “other” (individual/small landlord) ownership, not only from declining owner-occupancy.
+				</figcaption>
+			</figure>
+
+			<figure>
+				<img src="corp_ownership_by_district_2024.png" alt="Corporate ownership rate by district in 2024" />
+				<figcaption>
+					After viewing these graphs, a natural follow-up is how these different districts rank in terms of their corporate ownership percentage by the end of this period, so we visualize this with the following graph. We see South Boston Waterfront is the highest, which makes sense as Boston's seaport is a newly developed district with lots of corporations, and high-corp districts are the kind of areas most likely to be treated as a financial asset.
+				</figcaption>
+			</figure>
+
+			<figure>
+				<img src="pct_change_corp_ownership_by_neighborhood.png" alt="Percentage change in corporate ownership by neighborhood, 2004–2024" />
+				<figcaption>
+					We are also curious about the percentage change in corporate ownership across neighborhoods from 2004 to 2024, so we visualize this with the following graph. The second graph shows that percentage change and 2024 level are not the same. Neighborhoods with the largest percentage increases (e.g. West Roxbury, East Boston, Charlestown, Jamaica Plain, Mattapan, Roslindale) often had low corporate ownership in 2004 (around 1-4%) and grew to moderate levels by 2024 (about 13-30%). So they had big relative growth even though their 2024 rates are still below the highest districts. By contrast, neighborhoods with the smallest percentage changes (e.g. Chinatown, Downtown) started with higher corporate ownership in 2004 (around 9-13%) and rose to high levels by 2024 (about 30–34%); the relative increase is smaller even though their levels remain among the highest. South Boston Waterfront, which has the highest 2024 rate, shows a large percentage increase as well (around 470%), reflecting both a low 2004 base and strong growth. In short, the first graph answers where corporate ownership is highest in 2024 (e.g. South Boston Waterfront, Fenway, Downtown, Longwood). The second graph answers where corporate ownership grew the most in relative terms from 2004 to 2024 (e.g. West Roxbury, East Boston, Charlestown). Together they show that corporate ownership has risen in every neighborhood, with the biggest percentage gains often in areas that started low, and that high-growth areas are not only the already high-corp districts but also several outlying or previously lower-corp neighborhoods.
+				</figcaption>
+			</figure>
+
+			<figure>
+				<img src="corp_ownership_vs_neighborhood_size.png" alt="Corporate ownership rate vs neighborhood size in 2024" />
+				<figcaption>
+					After gaining some holistic understanding of the neighborhoods in Boston, a natural follow-up is what are the driving factors behind these differences, what are these different neighborhoods' profiles and whether it plays a role in corporate relationship. This graph is a scatter plot of corporate ownership rate in 2024 (y-axis) against neighborhood size. Each point is one Boston neighborhood, and a fitted trend line shows the average relationship between size and corporate ownership across neighborhoods. Points above the line are neighborhoods with higher corporate ownership than that average for their size; points below are neighborhoods with lower corporate ownership than average for their size. In this plot, the trend line slopes downward: on average, corporate ownership rate falls as total housing units increase. So larger neighborhoods (e.g. Dorchester, with many units) tend to have lower corporate ownership rates than smaller ones (e.g. Beacon Hill or North End), which may reflect different housing mix, demand, or investor focus in smaller, denser areas versus larger, more residential neighborhoods.
+				</figcaption>
+			</figure>
+
+			<figure>
+				<img src="corp_ownership_vs_vacancy_rate.png" alt="Corporate ownership rate vs vacancy rate in 2024" />
+				<figcaption>
+					The second graph plots corporate ownership rate (2024) against vacancy rate (vacant units / total units), one point per neighborhood, with a trend line. The trend slopes upward: neighborhoods with higher vacancy tend to have higher corporate ownership. It is important to consider the direction of cause: we cannot tell from this plot alone whether vacancy is driving corporate ownership or the reverse. On one hand, higher vacancy might attract corporate investors (e.g. more units available to buy). On the other hand, corporate ownership may be causing higher vacancy – for example, if investors hold units off the market, use them for short-term or seasonal use, or are slow to rent after purchase, so that more corporate ownership leads to more vacant units. Both channels are plausible; the graph shows only that the two go together. To better assess whether corporate ownership is contributing to vacancy would require additional analysis (e.g. over time, or controlling for other neighborhood traits). For interpretation, we should therefore state that corporate ownership and vacancy are positively associated, and that part of this association may reflect an effect of corporate ownership on vacancy, not only the other way around.
+				</figcaption>
+			</figure>
+
+			<figure>
+				<img src="corp_ownership_vs_racial_profile.png" alt="Corporate ownership rate vs racial composition in 2024" />
+				<figcaption>
+					The four-panel graph shows how the share of each racial group in a neighborhood relates to corporate ownership rate in 2024. There is a positive relationship for White and Asian (AAPI) shares: neighborhoods with a larger share White or Asian tend to have higher corporate ownership (e.g. South Boston Waterfront and Fenway have high corporate ownership and higher White shares; Chinatown has a high Asian share and moderate corporate ownership). There is a negative relationship for Black and Latino (Hispanic) shares: neighborhoods with a larger share Black or Latino tend to have lower corporate ownership (e.g. Mattapan and Hyde Park have high Black shares and low corporate ownership; East Boston has a high Latino share and moderate corporate ownership, while the trend across neighborhoods is still negative). So, on average, corporate ownership is higher in whiter and more Asian neighborhoods and lower in more Black and more Latino neighborhoods. This pattern fits with corporate and institutional investment concentrating in some areas (often whiter or gentrifying) more than in others (e.g. majority-Black or majority-Latino neighborhoods), though the graph shows association only – it does not show that race causes corporate ownership or vice versa. For a project on affordability and displacement, the figure suggests that exposure to corporate ownership is uneven by racial composition and who is most affected is a useful question for further work.
+				</figcaption>
+			</figure>
+		</section>
+
+		<section>
+			<h2>Summary</h2>
+
+			<p>In this exploratory data analysis, we examined how corporate ownership of residential housing has evolved across Boston neighborhoods from 2004 to 2024 and its relationship to owner occupancy and neighborhood characteristics. We first assessed data quality and found that the dataset provides consistent temporal and spatial coverage, though corporate ownership classification may contain some misclassification due to keyword-based identification. Our analysis shows that corporate ownership increased substantially in every Boston neighborhood over the period, while owner occupancy declined. This inverse relationship suggests a shift in housing from owner-occupied units toward corporate and investment ownership. We also found that corporate ownership growth came partly at the expense of individual landlord ownership, indicating broader restructuring of housing ownership patterns. Spatial analysis revealed that corporate ownership is highest in neighborhoods such as South Boston Waterfront, Fenway, and Downtown, while the largest percentage increases occurred in previously lower-corporate-ownership areas such as West Roxbury and East Boston. Finally, corporate ownership is negatively associated with neighborhood size and positively associated with vacancy rates, and it is more prevalent in neighborhoods with higher White and Asian populations compared to neighborhoods with higher Black and Latino populations. Overall, these findings suggest that corporate ownership has become an increasingly dominant feature of Boston’s housing market and may contribute to changes in housing stability, affordability, and neighborhood inequality.</p>
+		</section>
+	</main>
+</body>
+</html>
